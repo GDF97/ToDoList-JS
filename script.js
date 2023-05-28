@@ -1,62 +1,63 @@
-const btnAddTask = document.querySelector(".btnAdd");
-const btnShow = document.querySelector(".showVector");
-let checkIcon = document.createElement("i");
-let editIcon = document.createElement("i");
-let deleteIcon = document.createElement("i");
-checkIcon.classList.add("bx", "bx-check")
-let todoDiv = document.querySelector(".todo");
-let task = [];
+//Variaveis
+const btnAdd = document.querySelector(".btnAdd");
+const taskInput = document.querySelector(".taskInput");
+const todoList = document.querySelector(".todo");
 
-btnAddTask.addEventListener('click', addTask);
 
-function addTask(){
-    let taskInput = document.getElementById("taskInput");
-    if(taskInput.value === ""){
-        alert("Digite uma tarefa válida");
-    }
-    else{
-        task.push(taskInput.value);
-        showTasksInHTML();
-        taskInput.value = "";
-    }
+//Funções
+const saveTodo = (text) => {
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("tasks");
+    
+    const todoTitle = document.createElement("p");
+    todoTitle.innerText = text;
+
+    taskDiv.append(todoTitle);
+
+    const buttonWrapper = document.createElement("span");
+    buttonWrapper.classList.add("btnWrapper");
+    
+    taskDiv.append(buttonWrapper);
+
+    const btnCompleted = document.createElement("button");
+    btnCompleted.classList.add("btnCompleted", "btn");
+    btnCompleted.innerHTML = '<i class="bx bx-check completedIcon"> </i>';
+
+    const btnEdit = document.createElement("button");
+    btnEdit.classList.add("btnEdit", "btn");
+    btnEdit.innerHTML = '<i class="bx bxs-edit-alt editIcon"> </i>';
+
+    const btnDelete = document.createElement("button");
+    btnDelete.classList.add("btnDelete", "btn");
+    btnDelete.innerHTML = '<i class="bx bxs-trash trashIcon"> </i>';
+
+    buttonWrapper.append(btnCompleted, btnEdit, btnDelete);
+
+    todoList.append(taskDiv);
+    taskInput.value = '';
+    taskInput.focus();
 }
 
-function showTasksInHTML(){
-    console.clear();
-    todoDiv.innerHTML = "";
-    for(let i = 0; i < task.length; i++){
-        let checkIcon = document.createElement("i");
-        let editIcon = document.createElement("i");
-        let deleteIcon = document.createElement("i");
-        checkIcon.classList.add("bx", "bx-check");
-        editIcon.classList.add("bx", "bxs-edit-alt");
-        deleteIcon.classList.add("bx", "bxs-trash");
+//Eventos
+ btnAdd.addEventListener("click", (e)=>{
+    e.preventDefault();
 
-        let taskDiv = document.createElement("div");
-        taskDiv.classList.add("tasks");
-        let taskItem = document.createElement("p");
-        taskItem.textContent = task[i];
-        let buttonWrapper = document.createElement("div");
-        buttonWrapper.classList.add("btnWrapper");
-        let buttonDelete = document.createElement("button");
-        buttonDelete.classList.add("btn","btnDelete");
-        let buttonCompleted = document.createElement("button");
-        buttonCompleted.classList.add("btn","btnCompleted");
-        let buttonEdit = document.createElement("button");
-        buttonEdit.classList.add("btn", "btnEdit");
+    const inputValue = taskInput.value;
 
-        todoDiv.append(taskDiv);
-        taskDiv.append(taskItem);
-        taskDiv.append(buttonWrapper);
-        
-        buttonWrapper.append(buttonCompleted);
-        buttonWrapper.append(buttonEdit);
-        buttonWrapper.append(buttonDelete);
-
-        buttonCompleted.append(checkIcon);
-        buttonEdit.append(editIcon);
-        buttonDelete.append(deleteIcon);
-        console.log(task[i]);
+    if(inputValue){
+        saveTodo(inputValue);
     }
-}
+ })
 
+ document.addEventListener("click", (e)=>{
+    const targetElement = e.target;
+    const parentElement = targetElement.closest("div");
+
+    if(targetElement.classList.contains("btnCompleted") || targetElement.classList.contains("completedIcon")){
+        parentElement.classList.toggle("completed");
+    }
+
+    if(targetElement.classList.contains("btnDelete") || targetElement.classList.contains("trashIcon")){
+        parentElement.remove();
+    }
+ })
